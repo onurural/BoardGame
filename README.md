@@ -1,2 +1,3 @@
 # BoardGame
-Desktop board game project implemented with python which demonstrates A* and Uniform Cost Search 
+Desktop board game project for Izmir University of Economics SE 420 course 
+implemented using Python programming language to demonstrates A* and Uniform Cost Search 
