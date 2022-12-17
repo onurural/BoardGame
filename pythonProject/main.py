@@ -1,9 +1,12 @@
 # This is a sample Python script.
+import a_star_algorithm
+from a_star_algorithm import astar
+
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
-class GoalState:
+class State:
     initial = ""
     place = [0, 0]
 
@@ -177,7 +180,9 @@ game_board[rowG][colG] = "G"
 game_board[rowB][colB] = "B"
 
 print_board(game_board)
-go_up(game_board, "R")
+
+initial_states = [State("R", [rowR, colR]), State("G", [rowG, colG]), State("B", [rowB, colB])]
+
 
 
 print("Please enter goal states of red, green and blue.")
@@ -218,9 +223,9 @@ while will_break == 0:
     else:
         print("\nPlease enter a value considering 3x3 board")
 
-goal_states = [GoalState("R", [rowR, colR]), GoalState("G", [rowG, colG]), GoalState("B", [rowB, colB])]
+goal_states = [State("R", [rowR, colR]), State("G", [rowG, colG]), State("B", [rowB, colB])]
 
-print("\n---ARRAY FILLED---")
+print("\n---ARRAY---")
 print_board(game_board)
 
 # go_left(game_board, "R")
@@ -270,7 +275,52 @@ while true == 1:
         # TODO: UNIFORM COST
         break
     if searchingAlgorithm == "2":
-        # TODO: A*
+
+        path_R = astar(game_board, (initial_states[0].place[0], initial_states[0].place[1]), (goal_states[0].place[0], goal_states[0].place[1]), "R")
+        path_G = astar(game_board, (initial_states[1].place[0], initial_states[1].place[1]), (goal_states[1].place[0], goal_states[1].place[1]), "G")
+        path_B = astar(game_board, (initial_states[2].place[0], initial_states[2].place[1]), (goal_states[2].place[0], goal_states[2].place[1]), "B")
+
+        # order = ["0", "0", "0"]
+
+        ordered_paths = [("N", []), ("N", []), ("N", [])]
+
+        print("\n\nPlease enter the order of tiles that will do an action. Enter R for red, G for green and B for blue")
+
+        while true == 1:
+            state = input("First: ")
+            if is_initial_valid(state) == 1:
+                ordered_paths[0] = (state, path_R if state == "R" else path_G if state == "G" else path_B)
+                break
+            else:
+                print("Please enter a valid initial")
+
+        while true == 1:
+            state = input("Second: ")
+            if is_initial_valid(state) == 1:
+                if ordered_paths[0][0] == state:
+                    print("Please enter another initial to continue")
+                else:
+                    ordered_paths[1] = (state, path_R if state == "R" else path_G if state == "G" else path_B)
+                    break
+            else:
+                print("Please enter a valid initial")
+
+        while true == 1:
+            state = input("Third: ")
+            if is_initial_valid(state) == 1:
+                if ordered_paths[0][0] == state or ordered_paths[1][0] == state:
+                    print("Please enter another initial to continue")
+                else:
+                    ordered_paths[2] = (state, path_R if state == "R" else path_G if state == "G" else path_B)
+                    break
+            else:
+                print("Please enter a valid initial")
+
+        print("BOARD INITIALLY")
+        print_board(game_board)
+
+        print("Algoritim is running with the order: " + str(ordered_paths))
+
         break
     else:
         print("Please make a valid choice")

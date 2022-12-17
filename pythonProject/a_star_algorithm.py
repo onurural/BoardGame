@@ -1,12 +1,3 @@
-def print_board(board):
-    print("-------------")
-    for row in board:
-        print("| ", end="")
-        for tile in row:
-            print(tile + " | ", end="")
-        print("\n-------------")
-
-
 class Node():
     """A node class for A* Pathfinding"""
 
@@ -63,8 +54,8 @@ def astar(board, start, end, color):
 
         print("Expanding node at position: " + str(open_list[current_index].position) + " => f = g + h = " +
               str(open_list[current_index].g) + " + " + str(open_list[current_index].h) + " = " + str(
-            open_list[current_index].f) + ";\n" + str(vertical) + (" tile" if vertical == 1 else " tiles") + " away " +
-              " vertically and " + str(horizontal) + (" tile" if horizontal == 1 else " tiles") + " away horizontally "
+            open_list[current_index].f) + ";\n" + str(abs(vertical)) + (" tile" if vertical == 1 else " tiles") + " away " +
+              " vertically and " + str(abs(horizontal)) + (" tile" if horizontal == 1 else " tiles") + " away horizontally "
               + "from the goal state.\n")
 
         expansion_order.append(open_list[current_index])
@@ -168,22 +159,8 @@ def astar(board, start, end, color):
                 print("FRINGE IS FULL!")
 
 
-# ghost game board is for calculating appropraite moves
-game_board = [["N", "N", "N"], ["N", "N", "N"], ["N", "N", "N"]]
 
-print("---ARRAY INITIALLY---")
-print_board(game_board)
 
-# starting position
-game_board[0][0] = "R"
-game_board[0][1] = "G"
-game_board[0][2] = "B"
 
-print("\n---ARRAY FILLED---")
-print_board(game_board)
 
-print("\n\nPATH: " + str(astar(game_board, (0, 0), (2, 2), "R")))
 
-print("\n\nPATH: " + str(astar(game_board, (0, 1), (2, 2), "G")))
-
-print("\n\nPATH: " + str(astar(game_board, (0, 2), (2, 2), "B")))
