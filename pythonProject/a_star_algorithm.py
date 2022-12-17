@@ -22,7 +22,7 @@ class Node():
         return self.position == other.position
 
 
-def astar(maze, start, end):
+def astar(maze, start, end, color):
     """Returns a list of tuples as a path from the given start to the given end in the given maze"""
 
     print("\n\nA star algorithm started!")
@@ -62,9 +62,14 @@ def astar(maze, start, end):
 
         # Pop current off open list, add to closed list
         # print("LENGTH open: " + str(len(open_list)))
+        vertical = (end.__getitem__(0) - open_list[current_index].position[0])
+        horizontal = (end.__getitem__(1) - open_list[current_index].position[1])
+
         print("Expanding node at position: " + str(open_list[current_index].position) + " => f = g + h = " +
               str(open_list[current_index].g) + " + " + str(open_list[current_index].h) + " = " + str(
-            open_list[current_index].f) + "\n")
+            open_list[current_index].f) + ";\n" + str(vertical) + (" tile" if vertical == 1 else " tiles") + " away " +
+              " vertically and " + str(horizontal) + (" tile" if horizontal == 1 else " tiles") + " away horizontally "
+        + "from the goal state.\n")
 
         expansion_order.append(open_list[current_index])
         open_list.pop(current_index)
@@ -91,7 +96,7 @@ def astar(maze, start, end):
 
         # Generate children
         children = []
-        for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0)]:  # Adjacent squares
+        for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0)]:  # left - right - up - down
 
             # Get node position
             node_position = (current_node.position[0] + new_position[0],
@@ -121,7 +126,21 @@ def astar(maze, start, end):
                     continue
 
             # Calculating the f, g, and h values
-            child.g = current_node.g + 1  # for "R" cost is always 1
+            if color == "R":
+                child.g = current_node.g + 1  # for "R" cost is always 1
+
+            if color == "G":
+                if new_position[1] == -1 or new_position[1] == 1:  # left or right
+                    child.g = current_node.g + 1  # for "G" left-right cost is 1
+                if new_position[0] == -1 or new_position[0] == 1:  # up or down
+                    child.g = current_node.g + 2  # for "G" up-down cost is 2
+
+            if color == "B":
+                if new_position[1] == -1 or new_position[1] == 1:  # left or right
+                    child.g = current_node.g + 2  # for "B" left-right cost is 2
+                if new_position[0] == -1 or new_position[0] == 1:  # up or down
+                    child.g = current_node.g + 1  # for "B" up-down cost is 1
+
             child.h = ((child.position[0] - end_node.position[0]) ** 2) + (
                     (child.position[1] - end_node.position[1]) ** 2)
             child.f = child.g + child.h
@@ -150,4 +169,8 @@ game_board[0][0] = "R"
 print("\n---ARRAY FILLED---")
 print_board(game_board)
 
-print("\n\nPATH: " + str(astar(game_board, (0, 0), (2, 2))))
+print("\n\nPATH: " + str(astar(game_board, (0, 0), (2, 2), "R")))
+
+print("\n\nPATH: " + str(astar(game_board, (0, 0), (2, 2), "G")))
+
+print("\n\nPATH: " + str(astar(game_board, (0, 0), (2, 2), "B")))
