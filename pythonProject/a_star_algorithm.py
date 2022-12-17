@@ -22,9 +22,7 @@ class Node():
         return self.position == other.position
 
 
-def astar(maze, start, end, color):
-    """Returns a list of tuples as a path from the given start to the given end in the given maze"""
-
+def astar(board, start, end, color):
     print("\n\nA star algorithm started!")
     # Create start and end node
     start_node = Node(None, start)
@@ -39,7 +37,6 @@ def astar(maze, start, end, color):
 
     print("\n")
 
-    # Initialize both open and closed list
     open_list = []
     closed_list = []
 
@@ -61,7 +58,6 @@ def astar(maze, start, end, color):
                 current_index = index
 
         # Pop current off open list, add to closed list
-        # print("LENGTH open: " + str(len(open_list)))
         vertical = (end.__getitem__(0) - open_list[current_index].position[0])
         horizontal = (end.__getitem__(1) - open_list[current_index].position[1])
 
@@ -69,7 +65,7 @@ def astar(maze, start, end, color):
               str(open_list[current_index].g) + " + " + str(open_list[current_index].h) + " = " + str(
             open_list[current_index].f) + ";\n" + str(vertical) + (" tile" if vertical == 1 else " tiles") + " away " +
               " vertically and " + str(horizontal) + (" tile" if horizontal == 1 else " tiles") + " away horizontally "
-        + "from the goal state.\n")
+              + "from the goal state.\n")
 
         expansion_order.append(open_list[current_index])
         open_list.pop(current_index)
@@ -103,13 +99,28 @@ def astar(maze, start, end, color):
                              current_node.position[1] + new_position[1])  # a possible node we can go
 
             # Make sure within range
-            if node_position[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (
-                    len(maze[len(maze) - 1]) - 1) or node_position[1] < 0:
+            if node_position[0] > (len(board) - 1) or node_position[0] < 0 or node_position[1] > (
+                    len(board[len(board) - 1]) - 1) or node_position[1] < 0:
                 continue
 
-            # Make sure walkable terrain
-            if maze[node_position[0]][node_position[1]] != "N":
-                continue
+            # We have to neglect if it is R, G and B because this function is only for finding the shotest path R,
+            # G and B will move accorfingly to this algorithm, and they might not be in the same position when moving
+            # starts
+
+            if color == "R":
+                if board[node_position[0]][node_position[1]] != "N" and board[node_position[0]][
+                    node_position[1]] != "B" and board[node_position[0]][node_position[1]] != "G":
+                    continue
+
+            if color == "G":
+                if board[node_position[0]][node_position[1]] != "N" and board[node_position[0]][
+                    node_position[1]] != "R" and board[node_position[0]][node_position[1]] != "B":
+                    continue
+
+            if color == "B":
+                if board[node_position[0]][node_position[1]] != "N" and board[node_position[0]][
+                    node_position[1]] != "R" and board[node_position[0]][node_position[1]] != "G":
+                    continue
 
             # Create new node
             new_node = Node(current_node, node_position)
@@ -165,12 +176,14 @@ print_board(game_board)
 
 # starting position
 game_board[0][0] = "R"
+game_board[0][1] = "G"
+game_board[0][2] = "B"
 
 print("\n---ARRAY FILLED---")
 print_board(game_board)
 
 print("\n\nPATH: " + str(astar(game_board, (0, 0), (2, 2), "R")))
 
-print("\n\nPATH: " + str(astar(game_board, (0, 0), (2, 2), "G")))
+print("\n\nPATH: " + str(astar(game_board, (0, 1), (2, 2), "G")))
 
-print("\n\nPATH: " + str(astar(game_board, (0, 0), (2, 2), "B")))
+print("\n\nPATH: " + str(astar(game_board, (0, 2), (2, 2), "B")))
