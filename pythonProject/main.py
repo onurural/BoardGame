@@ -15,9 +15,31 @@ class State:
         self.place = place
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def move_tile(board, color_initial, state_list, goal_state_list):
+    print(state_list[2].initial)
+    index = 0 if color_initial == "R" else 1 if color_initial == "G" else 2
+    path = astar(board, (state_list[index].place[0], state_list[index].place[1]),
+                 (goal_state_list[index].place[0], goal_state_list[index].place[1]), color_initial)
+    if len(path) < 2:
+        return 0
+    state_list[index].place[0] = path[1][0]
+    state_list[index].place[1] = path[1][1]
+    move(board, color_initial, (path[1][0], path[1][1]))
+    print_board(board)
+
+    if len(path) > 2:
+        return 1
+
+
+def move(array, color_initial, where):
+    print("COLOR: " +color_initial)
+    for i in range(3):
+        for j in range(3):
+            if array[i][j] == color_initial:
+                print("FOUND: " + color_initial)
+                array[where[0]][where[1]] = color_initial
+                array[i][j] = "N"
+                return
 
 
 def print_board(board):
@@ -143,7 +165,7 @@ while will_break == 0:
     print("\nPlease enter the initial state of R:")
     rowR = int(input("row: "))
     colR = int(input("column: "))
-    print(str(rowR) + " " + str(colR))
+    # print(str(rowR) + " " + str(colR))
     if is_replacement_in_board(rowR, colR) == 1:
         break
     else:
@@ -181,13 +203,13 @@ game_board[rowB][colB] = "B"
 
 print_board(game_board)
 
-initial_states = [State("R", [rowR, colR]), State("G", [rowG, colG]), State("B", [rowB, colB])]
+states = [State("R", [rowR, colR]), State("G", [rowG, colG]), State("B", [rowB, colB])]
 
-
+print("INITIALS: " + states[0].initial + " " + states[1].initial + " " + states[2].initial)
 
 print("Please enter goal states of red, green and blue.")
-will_break = 0
-while will_break == 0:
+
+while 1:
     print("\nPlease enter the goal state of R:")
     rowR = int(input("row: "))
     colR = int(input("column: "))
@@ -203,7 +225,7 @@ while will_break == 0:
     rowG = int(input("row: "))
     colG = int(input("column: "))
     if is_replacement_in_board(rowG, colG) == 1:
-        if rowG == rowR & colG == colR:
+        if rowG == rowR and colG == colR:
             print("\nPlease enter a value that does not overlap with other colors")
         else:
             break
@@ -239,21 +261,21 @@ while true == 1:
     searchingAlgorithm = input("Your choice: ")
 
     if searchingAlgorithm == "1":
-        initial_states = ["N", "N", "N"]
+        #states = ["N", "N", "N"]
 
         print("Please enter the order of tiles that will do an action. Enter R for red, G for green and B for blue")
 
         while true == 1:
-            initial_states[0] = input("First: ")
-            if is_initial_valid(initial_states[0]) == 1:
+            states[0] = input("First: ")
+            if is_initial_valid(states[0]) == 1:
                 break
             else:
                 print("Please enter a valid initial")
 
         while true == 1:
-            initial_states[1] = input("Second: ")
-            if is_initial_valid(initial_states[1]) == 1:
-                if initial_states[0] == initial_states[1]:
+            states[1] = input("Second: ")
+            if is_initial_valid(states[1]) == 1:
+                if states[0] == states[1]:
                     print("Please enter another initial to continue")
                 else:
                     break
@@ -261,66 +283,34 @@ while true == 1:
                 print("Please enter a valid initial")
 
         while true == 1:
-            initial_states[2] = input("Third: ")
-            if is_initial_valid(initial_states[2]) == 1:
-                if initial_states[0] == initial_states[2] or initial_states[1] == initial_states[2]:
+            states[2] = input("Third: ")
+            if is_initial_valid(states[2]) == 1:
+                if states[0] == states[2] or states[1] == states[2]:
                     print("Please enter another initial to continue")
                 else:
                     break
             else:
                 print("Please enter a valid initial")
 
-        print(initial_states)
+        print(states)
 
         # TODO: UNIFORM COST
         break
-    if searchingAlgorithm == "2":
+    elif searchingAlgorithm == "2":
 
-        path_R = astar(game_board, (initial_states[0].place[0], initial_states[0].place[1]), (goal_states[0].place[0], goal_states[0].place[1]), "R")
-        path_G = astar(game_board, (initial_states[1].place[0], initial_states[1].place[1]), (goal_states[1].place[0], goal_states[1].place[1]), "G")
-        path_B = astar(game_board, (initial_states[2].place[0], initial_states[2].place[1]), (goal_states[2].place[0], goal_states[2].place[1]), "B")
+        print("Please enter the order of tiles")
+        first = input("First: ")
+        second = input("Second: ")
+        third = input("Third: ")
 
-        # order = ["0", "0", "0"]
+        while (1):
+            decision_point1 = move_tile(game_board, first, states, goal_states)
+            decision_point2 = move_tile(game_board, second, states, goal_states)
+            decision_point3 = move_tile(game_board, third, states, goal_states)
 
-        ordered_paths = [("N", []), ("N", []), ("N", [])]
-
-        print("\n\nPlease enter the order of tiles that will do an action. Enter R for red, G for green and B for blue")
-
-        while true == 1:
-            state = input("First: ")
-            if is_initial_valid(state) == 1:
-                ordered_paths[0] = (state, path_R if state == "R" else path_G if state == "G" else path_B)
+            if decision_point1 == 0 and decision_point2 == 0 and decision_point3 == 0:
                 break
-            else:
-                print("Please enter a valid initial")
-
-        while true == 1:
-            state = input("Second: ")
-            if is_initial_valid(state) == 1:
-                if ordered_paths[0][0] == state:
-                    print("Please enter another initial to continue")
-                else:
-                    ordered_paths[1] = (state, path_R if state == "R" else path_G if state == "G" else path_B)
-                    break
-            else:
-                print("Please enter a valid initial")
-
-        while true == 1:
-            state = input("Third: ")
-            if is_initial_valid(state) == 1:
-                if ordered_paths[0][0] == state or ordered_paths[1][0] == state:
-                    print("Please enter another initial to continue")
-                else:
-                    ordered_paths[2] = (state, path_R if state == "R" else path_G if state == "G" else path_B)
-                    break
-            else:
-                print("Please enter a valid initial")
-
-        print("BOARD INITIALLY")
-        print_board(game_board)
-
-        print("Algoritim is running with the order: " + str(ordered_paths))
-
         break
-    else:
-        print("Please make a valid choice")
+
+
+

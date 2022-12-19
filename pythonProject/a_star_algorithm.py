@@ -54,8 +54,10 @@ def astar(board, start, end, color):
 
         print("Expanding node at position: " + str(open_list[current_index].position) + " => f = g + h = " +
               str(open_list[current_index].g) + " + " + str(open_list[current_index].h) + " = " + str(
-            open_list[current_index].f) + ";\n" + str(abs(vertical)) + (" tile" if vertical == 1 else " tiles") + " away " +
-              " vertically and " + str(abs(horizontal)) + (" tile" if horizontal == 1 else " tiles") + " away horizontally "
+            open_list[current_index].f) + ";\n" + str(abs(vertical)) + (
+                  " tile" if vertical == 1 else " tiles") + " away " +
+              " vertically and " + str(abs(horizontal)) + (
+                  " tile" if horizontal == 1 else " tiles") + " away horizontally "
               + "from the goal state.\n")
 
         expansion_order.append(open_list[current_index])
@@ -71,6 +73,8 @@ def astar(board, start, end, color):
                 print(expansion_order[index].position, end="")
                 if index != len(expansion_order) - 1:
                     print(" => ", end="")
+                else:
+                    print("\n")
                 # if index != (len(expansion_order) - 1):
                 #   print(" => ", end="")
 
@@ -94,11 +98,10 @@ def astar(board, start, end, color):
                     len(board[len(board) - 1]) - 1) or node_position[1] < 0:
                 continue
 
-            # We have to neglect if it is R, G and B because this function is only for finding the shotest path R,
-            # G and B will move accorfingly to this algorithm, and they might not be in the same position when moving
-            # starts
+            if board[node_position[0]][node_position[1]] != "N":
+                continue
 
-            if color == "R":
+            """if color == "R":
                 if board[node_position[0]][node_position[1]] != "N" and board[node_position[0]][
                     node_position[1]] != "B" and board[node_position[0]][node_position[1]] != "G":
                     continue
@@ -111,7 +114,7 @@ def astar(board, start, end, color):
             if color == "B":
                 if board[node_position[0]][node_position[1]] != "N" and board[node_position[0]][
                     node_position[1]] != "R" and board[node_position[0]][node_position[1]] != "G":
-                    continue
+                    continue"""
 
             # Create new node
             new_node = Node(current_node, node_position)
@@ -156,11 +159,13 @@ def astar(board, start, end, color):
             if len(open_list) < 25:
                 open_list.append(child)
             else:
+                # TODO: VERY UNSURE ABOUT THIS PART
                 print("FRINGE IS FULL!")
-
-
-
-
-
+                path = []
+                current = current_node
+                while current is not None:
+                    path.append(current.position)
+                    current = current.parent
+                return path[::-1]
 
 
