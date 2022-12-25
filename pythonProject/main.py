@@ -15,11 +15,75 @@ class State:
         self.place = place
 
 
+# correctPlace = 0
+
+
 def move_tile(board, color_initial, state_list, goal_state_list):
+    red_x = goal_states[0].place[0]
+    red_y = goal_states[0].place[1]
+    green_x = goal_states[1].place[0]
+    green_y = goal_states[1].place[1]
+    blue_x = goal_states[2].place[0]
+    blue_y = goal_states[2].place[1]
+
+    # global correctPlace
+
+    print(state_list[2].initial)
+    index = 0 if color_initial == "R" else 1 if color_initial == "G" else 2
+
+    correct_places = 0
+
+    # print("WE ARE ON COLOR: " + color_initial)
+
+    # print("CORRECT: " + str(correct_places))
+    # print("       STATES       X      GOAL STATES")
+    # print("       (" + str(state_list[0].place[0]) + ", " + str(state_list[0].place[1]) + ")              (" + str(
+    #     goal_state_list[0].place[0]) + ", " + str(goal_state_list[0].place[1]) + ")")
+    # print("       (" + str(state_list[1].place[0]) + ", " + str(state_list[1].place[1]) + ")              (" + str(
+    #     goal_state_list[1].place[0]) + ", " + str(goal_state_list[1].place[1]) + ")")
+    # print("       (" + str(state_list[2].place[0]) + ", " + str(state_list[2].place[1]) + ")              (" + str(
+    #     goal_state_list[2].place[0]) + ", " + str(goal_state_list[2].place[1]) + ")")
+
+    if state_list[0].place[0] == red_x and state_list[0].place[1] == red_y:
+        correct_places = correct_places + 1
+        # print("\nCorrect place if 1: \n" + str(correct_places))
+        # print("R IS IN CORRECT PLACE")
+    if state_list[1].place[0] == green_x and state_list[1].place[1] == green_y:
+        correct_places = correct_places + 1
+        # print("\nCorrect place if 2: \n" + str(correct_places))
+        # print("G IS IN CORRECT PLACE")
+    if state_list[2].place[0] == blue_x and state_list[2].place[1] == blue_y:
+        correct_places = correct_places + 1
+        # print("\nCorrect place if 3: \n" + str(correct_places))
+        # print("B IS IN CORRECT PLACE")
+
+    # print("\nCorrect place main: \n" + str(correct_places))
+
+    path = astar(board, (state_list[index].place[0], state_list[index].place[1]),
+                 (goal_state_list[index].place[0], goal_state_list[index].place[1]), color_initial, correct_places)
+
+    if path == 0:
+        print("EXCEED EXPANSION CAPACITY! GOAL NODE NOT FOUND! SWITCHING TO THE NEXT COLOR!")
+    else:
+        if len(path) < 2:
+            return 0
+        state_list[index].place[0] = path[1][0]
+        state_list[index].place[1] = path[1][1]
+        move(board, color_initial, (path[1][0], path[1][1]))
+        print_board(board)
+
+        # print("CORRECT PLACE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  :   " + str(correctPlace))
+
+        if len(path) > 2:
+            return 1
+
+
+"""def move_tile(board, color_initial, state_list, goal_state_list):
+    global correct_place
     print(state_list[2].initial)
     index = 0 if color_initial == "R" else 1 if color_initial == "G" else 2
     path = astar(board, (state_list[index].place[0], state_list[index].place[1]),
-                 (goal_state_list[index].place[0], goal_state_list[index].place[1]), color_initial)
+                 (goal_state_list[index].place[0], goal_state_list[index].place[1]), color_initial, correct_place)
     if len(path) < 2:
         return 0
     state_list[index].place[0] = path[1][0]
@@ -28,11 +92,11 @@ def move_tile(board, color_initial, state_list, goal_state_list):
     print_board(board)
 
     if len(path) > 2:
-        return 1
+        return 1"""
 
 
 def move(array, color_initial, where):
-    print("COLOR: " +color_initial)
+    print("COLOR: " + color_initial)
     for i in range(3):
         for j in range(3):
             if array[i][j] == color_initial:
@@ -261,7 +325,7 @@ while true == 1:
     searchingAlgorithm = input("Your choice: ")
 
     if searchingAlgorithm == "1":
-        #states = ["N", "N", "N"]
+        # states = ["N", "N", "N"]
 
         print("Please enter the order of tiles that will do an action. Enter R for red, G for green and B for blue")
 
@@ -311,6 +375,3 @@ while true == 1:
             if decision_point1 == 0 and decision_point2 == 0 and decision_point3 == 0:
                 break
         break
-
-
-

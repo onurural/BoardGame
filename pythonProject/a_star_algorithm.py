@@ -14,6 +14,7 @@ class Node():
 
 
 def astar(board, start, end, color, correctPlace):
+    first_entered = 1
     print("\n\nA star algorithm started!")
     # Create start and end node
     start_node = Node(None, start)
@@ -53,16 +54,24 @@ def astar(board, start, end, color, correctPlace):
         # Pop current off open list, add to closed list
         vertical = (end.__getitem__(0) - open_list[current_index].position[0])
         horizontal = (end.__getitem__(1) - open_list[current_index].position[1])
-          
+
+        # TODO: COULD THERE BE A BETTER CHANCE?
         print("Expanding node at position: " + str(open_list[current_index].position) + " => f = g + h = " +
-              str(open_list[current_index].g) + " + " + str(open_list[current_index].h) + " = " + str(
-            open_list[current_index].f) + ";\n" + str(abs(vertical)) + (" tile" if vertical == 1 else " tiles") + " away " +
-              " vertically and " + str(abs(horizontal)) + (" tile" if horizontal == 1 else " tiles") + " away horizontally "
+              str(open_list[current_index].g) + " + " + str(
+            open_list[current_index].h if first_entered != 1 else (3 - correctPlace)) + " = " + str(
+            open_list[current_index].f if first_entered != 1 else (3 - correctPlace)) + ";\n" + str(abs(vertical)) + (
+                  " tile" if vertical == 1 else " tiles") + " away " +
+              " vertically and " + str(abs(horizontal)) + (
+                  " tile" if horizontal == 1 else " tiles") + " away horizontally "
               + "from the goal state.\n")
 
+        first_entered = 0
         expansion_order.append(open_list[current_index])
         open_list.pop(current_index)
         closed_list.append(current_node)
+
+        if len(expansion_order) >= 10:
+            return 0
 
         # Found the goal
         if current_node == end_node:
@@ -73,6 +82,8 @@ def astar(board, start, end, color, correctPlace):
                 print(expansion_order[index].position, end="")
                 if index != len(expansion_order) - 1:
                     print(" => ", end="")
+                else:
+                    print("\n")
                 # if index != (len(expansion_order) - 1):
                 #   print(" => ", end="")
 
@@ -96,11 +107,10 @@ def astar(board, start, end, color, correctPlace):
                     len(board[len(board) - 1]) - 1) or node_position[1] < 0:
                 continue
 
-            # We have to neglect if it is R, G and B because this function is only for finding the shotest path R,
-            # G and B will move accorfingly to this algorithm, and they might not be in the same position when moving
-            # starts
+            if board[node_position[0]][node_position[1]] != "N":
+                continue
 
-            if color == "R":
+            """if color == "R":
                 if board[node_position[0]][node_position[1]] != "N" and board[node_position[0]][
                     node_position[1]] != "B" and board[node_position[0]][node_position[1]] != "G":
                     continue
@@ -113,7 +123,7 @@ def astar(board, start, end, color, correctPlace):
             if color == "B":
                 if board[node_position[0]][node_position[1]] != "N" and board[node_position[0]][
                     node_position[1]] != "R" and board[node_position[0]][node_position[1]] != "G":
-                    continue
+                    continue"""
 
             # Create new node
             new_node = Node(current_node, node_position)
@@ -147,7 +157,11 @@ def astar(board, start, end, color, correctPlace):
 
             # child.h = ((child.position[0] - end_node.position[0]) ** 2) + (
             #         (child.position[1] - end_node.position[1]) ** 2)
-            child.h = 3 - correctPlace
+
+            if child.position[0] == end_node.position[0] and child.position[1] - end_node.position[1]:
+                child.h = 3 - correctPlace - 1
+            else:
+                child.h = 3 - correctPlace
             child.f = child.g + child.h
 
             # Child is already in the open list
@@ -156,14 +170,8 @@ def astar(board, start, end, color, correctPlace):
                     continue
 
             # Add the child to the open list
-            if len(open_list) < 25:
-                open_list.append(child)
-            else:
-                print("FRINGE IS FULL!")
+            if len(open_list) >= 25:
+                print("FRINGE IS FULL! DELETING FIRST ONE!")
+                open_list.pop()
 
-
-
-
-
-
-
+            open_list.append(child)
