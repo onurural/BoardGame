@@ -5,8 +5,8 @@ from tkinter import messagebox
 from tkinter import Canvas
 import main as m
 from main import *
-import a_star_algorithm
-from a_star_algorithm import astar
+import cost
+from cost import calculateCost
 
 class State:
     initial = ""
@@ -37,8 +37,8 @@ def move_tile(board, color_initial, state_list, goal_state_list):
     elif index == 2 and state_list[index].place[0] == blue_x and state_list[index].place[1] == blue_y:
         correctPlace=correctPlace+1
     
-    path = astar(board, (state_list[index].place[0], state_list[index].place[1]),
-                 (goal_state_list[index].place[0], goal_state_list[index].place[1]), color_initial, correctPlace)
+    path = calculateCost(board, (state_list[index].place[0], state_list[index].place[1]),
+                 (goal_state_list[index].place[0], goal_state_list[index].place[1]), color_initial, correctPlace, searchingAlgorithm)
     if len(path) < 2:
         return 0
     state_list[index].place[0] = path[1][0]

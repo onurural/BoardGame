@@ -1,6 +1,6 @@
 # This is a sample Python script.
-import a_star_algorithm
-from a_star_algorithm import astar
+import cost
+from cost import calculateCost
 
 
 # Press Shift+F10 to execute it or replace it with your code.
@@ -241,7 +241,7 @@ while will_break == 0:
     rowG = int(input("row: "))
     colG = int(input("column: "))
     if is_replacement_in_board(rowG, colG) == 1:
-        if rowG == rowR & colG == colR:
+        if rowG == rowR and colG == colR:
             print("\nPlease enter a value that does not overlap with other colors")
         else:
             break
