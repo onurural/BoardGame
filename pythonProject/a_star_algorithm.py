@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 
+
 class Node():
     """A node class for A* Pathfinding"""
 
@@ -15,6 +16,7 @@ class Node():
 
     def __eq__(self, other):
         return self.position == other.position
+
 
 root = tk.Tk()
 root.title("Board Game")
@@ -42,11 +44,13 @@ x = 0
 
 current_path = []
 current_color = ""
+
+
 # def increase_x():
 #     global x
 #     x=x+1
 
-def create_puzzle(path, color):
+def create_puzzle_beyza(path, color):
     # obj = Result()
     # for x in range(len(path)):
 
@@ -64,18 +68,18 @@ def create_puzzle(path, color):
 
     # pathX = path[x][0]
     # pathY = path[x][1]
-    
+
     buttons = [[], [], []]
     for i in range(3):
         for j in range(3):
             buttons[i].append(Button(frameOperation, height=2, width=5, bd=6))
             # print("***********************" + str(path[i][0]) + "*******************" + str(path[i][1]))
             if color == "R" and i == path[i][0] and j == path[i][1]:
-                buttons[i][j].configure(bg = 'red')
+                buttons[i][j].configure(bg='red')
             elif color == "G" and i == path[i][0] and j == path[i][1]:
-                buttons[i][j].configure(bg = 'green')
+                buttons[i][j].configure(bg='green')
             elif color == "B" and i == path[i][0] and j == path[i][1]:
-                buttons[i][j].configure(bg = 'blue')
+                buttons[i][j].configure(bg='blue')
             buttons[i][j].grid(row=i, column=j)
             # if color == "R" and i == pathX and j == pathY:
             #     buttons[i][j].configure(bg = 'red')
@@ -84,22 +88,42 @@ def create_puzzle(path, color):
             # elif color == "B" and i == pathX and j == pathY:
             #     buttons[i][j].configure(bg = 'blue')
             # buttons[i][j].grid(row=i, column=j)
-                # obj.refresh_frame(obj, path, color)
+            # obj.refresh_frame(obj, path, color)
         # increase_x()
-    
+
     print("BUTTON LENGTH --------------------------- " + str(len(buttons)))
 
     for i in range(len(buttons)):
         print(buttons[i])
 
-Button(root, text="NEXT", height=3, width=15, bd=6, command=create_puzzle(current_path, current_color)).place(x=10,y=800)
+
+def create_puzzle(board):
+    buttons = [[], [], []]
+
+    for i in range(3):
+        for j in range(3):
+            buttons[i].append(Button(frameOperation, height=2, width=5, bd=6))
+            if board[i][j] == "R":
+                buttons[i][j].configure(bg='red')
+            if board[i][j] == "G":
+                buttons[i][j].configure(bg='green')
+            if board[i][j] == "B":
+                buttons[i][j].configure(bg='blue')
+            buttons[i][j].grid(row=i, column=j)
+
+    print("BUTTON LENGTH --------------------------- " + str(len(buttons)))
+
+    for i in range(len(buttons)):
+        print(buttons[i])
+
+
+#Button(root, text="NEXT", height=3, width=15, bd=6, command=create_puzzle(current_path, current_color)).place(x=10,y=800)
+
 
 
 def astar(board, start, end, color, correctPlace):
-
     global current_color
     current_color = color
-
 
     first_entered = 1
     print("\n\nA star algorithm started!")
@@ -127,7 +151,6 @@ def astar(board, start, end, color, correctPlace):
 
     # Loop until you find the end
     while len(open_list) > 0:
-
         # Get the current node
         current_node = open_list[0]
         current_index = 0
@@ -180,13 +203,14 @@ def astar(board, start, end, color, correctPlace):
                 path.append(current.position)
                 current = current.parent
                 print("PATH!!!!!!!!!!!!!!!!!!!!!!!!!!! " + str(path[0][0]))
-            
-            
+
             global current_path
             current_path = path
-            create_puzzle(current_path, current_color)
+            #create_puzzle(current_path, current_color)
+            create_puzzle(board)
+
             return path[::-1]  # Return reversed path
-            
+
         # Generate children
         children = []
         for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0)]:  # left - right - up - down
@@ -202,21 +226,6 @@ def astar(board, start, end, color, correctPlace):
 
             if board[node_position[0]][node_position[1]] != "N":
                 continue
-
-            """if color == "R":
-                if board[node_position[0]][node_position[1]] != "N" and board[node_position[0]][
-                    node_position[1]] != "B" and board[node_position[0]][node_position[1]] != "G":
-                    continue
-
-            if color == "G":
-                if board[node_position[0]][node_position[1]] != "N" and board[node_position[0]][
-                    node_position[1]] != "R" and board[node_position[0]][node_position[1]] != "B":
-                    continue
-
-            if color == "B":
-                if board[node_position[0]][node_position[1]] != "N" and board[node_position[0]][
-                    node_position[1]] != "R" and board[node_position[0]][node_position[1]] != "G":
-                    continue"""
 
             # Create new node
             new_node = Node(current_node, node_position)
@@ -264,7 +273,15 @@ def astar(board, start, end, color, correctPlace):
 
             # Add the child to the open list
             if len(open_list) >= 25:
-                print("FRINGE IS FULL! DELETING FIRST ONE!")
-                open_list.pop()
+                print("FRINGE IS FULL! DELETING THE NODE WITH MOST COST! COST IS: ", end="")
+                node_to_be_deleted = None
+                highest_node_f = -1
+                for i in range(len(open_list)):
+                    if highest_node_f < open_list[i].f:
+                        highest_node_f = open_list[i].f
+                        node_to_be_deleted = open_list[i]
+
+                print(str(highest_node_f))
+                open_list.remove(node_to_be_deleted)
 
             open_list.append(child)

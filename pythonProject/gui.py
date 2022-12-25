@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import ttk
 from main import *
 from a_star_algorithm import astar
+import time
 
 class State:
     initial = ""
@@ -11,6 +12,7 @@ class State:
     def __init__(self, initial, place):
         self.initial = initial
         self.place = place
+
 
 def move_tile(board, color_initial, state_list, goal_state_list):
     red_x = goal_states[0].place[0]
@@ -193,8 +195,8 @@ frameInitial.pack(padx=400, pady=50)
 frameGoal = tk.Frame(root)
 frameGoal.pack(padx=400, pady=100)
 
-# frameOperation = tk.Frame(root)
-# frameOperation.pack(padx=400, pady=200)
+frameOperation = tk.Frame(root)
+frameOperation.pack(padx=400, pady=200)
 
 # INITIAL STATES
 
@@ -327,6 +329,7 @@ algorithmCbx = ttk.Combobox(root, width = 25)
 algorithmCbx.place(x=130,y=575)
 algorithmCbx['values'] = ("A*", "Uniform Cost Search")
 
+
 def return_algorithm():
     if str(algorithmCbx.get()) == "Uniform Cost Search":
         return 1
@@ -354,6 +357,7 @@ secondTileOrderValue.place(x=100,y=715)
 thirdTileOrderValue = Text(root, height = 1, width = 10)
 thirdTileOrderValue.place(x=100,y=755)
 
+
 def print_board(board):
     print("-------------")
     for row in board:
@@ -362,9 +366,9 @@ def print_board(board):
             print(tile + " | ", end="")
         print("\n-------------")
 
+
 buttonsInitial = [[], [], []]
 buttonsGoal = [[], [], []]
-# buttons = [[], [], []]
 game_board = [["N", "N", "N"], ["N", "N", "N"], ["N", "N", "N"]]
 game_board_goal = [["N", "N", "N"], ["N", "N", "N"], ["N", "N", "N"]]
 states = []
@@ -373,8 +377,8 @@ goal_states = []
 print("---ARRAY START---")
 print_board(game_board)
 
-def create_puzzle_initial():
 
+def create_puzzle_initial():
     redx = int(float(RedRow.get()))
     redy = int(float(RedCol.get()))
     greenx = int(float(GreenRow.get()))
@@ -401,6 +405,7 @@ def create_puzzle_initial():
     print("---ARRAY INITIALLY---")
     print_board(game_board)
 
+
 def create_puzzle_goal():
 
     redx = int(float(RedRowGoal.get()))
@@ -426,22 +431,24 @@ def create_puzzle_goal():
                 game_board_goal[i][j] = "B"
                 goal_states.append(State("B", [i,j]))
             buttonsGoal[i][j].grid(row=i, column=j)
-    
+
     print("---ARRAY GOAL---")
     print_board(game_board_goal)
 
-        
-# def create_puzzle(path, color):
-#     for i in range(len(path)):
-#         for j in range(2):
-#             buttons[i].append(Button(frameOperation, height=2, width=5, bd=6))
-#             if color == "R":
-#                 buttons[i][j].configure(bg = 'red')
-#             elif color == "G":
-#                 buttons[i][j].configure(bg = 'green')
-#             elif color == "B":
-#                 buttons[i][j].configure(bg = 'blue')
-#             buttons[i][j].grid(row=i, column=j)
+
+def create_puzzle(path, color):
+    buttons = [[],[],[]]
+    for i in range(len(path)):
+        for j in range(2):
+            buttons[i].append(Button(frameOperation, height=2, width=5, bd=6))
+            if color == "R":
+                buttons[i][j].configure(bg = 'red')
+            elif color == "G":
+                buttons[i][j].configure(bg = 'green')
+            elif color == "B":
+                buttons[i][j].configure(bg = 'blue')
+            buttons[i][j].grid(row=i, column=j)
+
 
 def start_calculation():
     true = 1
@@ -459,7 +466,7 @@ def start_calculation():
 
             while true == 1:
                 states[0] = input("First: ")
-                if is_initial_valid(g.states[0]) == 1:
+                if is_initial_valid(states[0]) == 1:
                     break
                 else:
                     print("Please enter a valid initial")
@@ -477,7 +484,7 @@ def start_calculation():
             while true == 1:
                 states[2] = input("Third: ")
                 if is_initial_valid(states[2]) == 1:
-                    if g.states[0] == states[2] or states[1] == states[2]:
+                    if states[0] == states[2] or states[1] == states[2]:
                         print("Please enter another initial to continue")
                     else:
                         break
@@ -502,13 +509,23 @@ def start_calculation():
             # print(goal_states)
             # print("FIRST: " + first + " SECOND: " + second + " THIRD: " + third)
 
+            counter = 0
             while (1):
                 decision_point1 = move_tile(game_board, first, states, goal_states)
+                #time.sleep(2)
                 decision_point2 = move_tile(game_board, second, states, goal_states)
+                #time.sleep(2)
                 decision_point3 = move_tile(game_board, third, states, goal_states)
+                #time.sleep(2)
 
+
+                # print("COUNTER: " + str(counter))
                 if decision_point1 == 0 and decision_point2 == 0 and decision_point3 == 0:
                     break
+                if counter == 100:
+                    print("PATH FINDING IMPOSSIBLE WITH GIVEN VALUES AND ALGORITHM!")
+                    break
+                counter += 1
             break
 
 Button(root, text="Create Initial Board", height=3, width=15, bd=6, command=create_puzzle_initial).place(x=10,y=175)

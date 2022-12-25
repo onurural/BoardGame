@@ -367,11 +367,17 @@ while true == 1:
         second = input("Second: ")
         third = input("Third: ")
 
+        counter = 0
         while (1):
             decision_point1 = move_tile(game_board, first, states, goal_states)
             decision_point2 = move_tile(game_board, second, states, goal_states)
             decision_point3 = move_tile(game_board, third, states, goal_states)
 
+            print("COUNTER: " + str(counter))
             if decision_point1 == 0 and decision_point2 == 0 and decision_point3 == 0:
                 break
+            if counter == 100:
+                print("PATH FINDING IMPOSSIBLE WITH GIVEN VALUES AND ALGORITHM!")
+                break
+            counter += 1
         break
