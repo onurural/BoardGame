@@ -23,7 +23,6 @@ def move_tile(board, color_initial, state_list, goal_state_list):
 
     # global correctPlace
 
-    print(state_list[2].initial)
     index = 0 if color_initial == "R" else 1 if color_initial == "G" else 2
 
     correct_places = 0
