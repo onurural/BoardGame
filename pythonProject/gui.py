@@ -426,83 +426,83 @@ def print_data():
     print(goal_states)
 
 
-# data = []
+data = []
 
-# def get_data():
-#     data.append(return_algorithm())
-#     data.append(str(firstTileOrderValue.get("1.0",END)))
-#     data.append(str(secondTileOrderValue.get("1.0",END)))
-#     data.append(str(thirdTileOrderValue.get("1.0",END)))
+def get_data():
+    data.append(return_algorithm())
+    data.append(str(firstTileOrderValue.get("1.0",END)))
+    data.append(str(secondTileOrderValue.get("1.0",END)))
+    data.append(str(thirdTileOrderValue.get("1.0",END)))
 
-# def set_data(f, s, t):
-#     first = str(firstTileOrderValue.get("1.0",END))
-#     second = str(secondTileOrderValue.get("1.0",END))
-#     third = str(thirdTileOrderValue.get("1.0",END))
+def set_data(f, s, t):
+    first = str(firstTileOrderValue.get("1.0",END))
+    second = str(secondTileOrderValue.get("1.0",END))
+    third = str(thirdTileOrderValue.get("1.0",END))
 
-# first = ""
-# second = ""
-# third = ""
+first = ""
+second = ""
+third = ""
 
-# true = 1
-# while true == 1:
-# # print("Please choose a searching strategy:")
-# # print("1) Uniform cost search")
-# # print("2) A* search")
+true = 1
+while true == 1:
+# print("Please choose a searching strategy:")
+# print("1) Uniform cost search")
+# print("2) A* search")
 
-#     searchingAlgorithm = return_algorithm()
+    searchingAlgorithm = return_algorithm()
 
-#     if searchingAlgorithm == "1":
-#         #states = ["N", "N", "N"]
+    if searchingAlgorithm == "1":
+        #states = ["N", "N", "N"]
 
-#         print("Please enter the order of tiles that will do an action. Enter R for red, G for green and B for blue")
+        print("Please enter the order of tiles that will do an action. Enter R for red, G for green and B for blue")
 
-#         while true == 1:
-#             states[0] = input("First: ")
-#             if is_initial_valid(g.states[0]) == 1:
-#                 break
-#             else:
-#                 print("Please enter a valid initial")
+        while true == 1:
+            states[0] = input("First: ")
+            if is_initial_valid(g.states[0]) == 1:
+                break
+            else:
+                print("Please enter a valid initial")
 
-#         while true == 1:
-#             states[1] = input("Second: ")
-#             if is_initial_valid(states[1]) == 1:
-#                 if states[0] == states[1]:
-#                     print("Please enter another initial to continue")
-#                 else:
-#                     break
-#             else:
-#                 print("Please enter a valid initial")
+        while true == 1:
+            states[1] = input("Second: ")
+            if is_initial_valid(states[1]) == 1:
+                if states[0] == states[1]:
+                    print("Please enter another initial to continue")
+                else:
+                    break
+            else:
+                print("Please enter a valid initial")
 
-#         while true == 1:
-#             g.states[2] = input("Third: ")
-#             if is_initial_valid(states[2]) == 1:
-#                 if g.states[0] == states[2] or states[1] == states[2]:
-#                     print("Please enter another initial to continue")
-#                 else:
-#                     break
-#             else:
-#                 print("Please enter a valid initial")
+        while true == 1:
+            g.states[2] = input("Third: ")
+            if is_initial_valid(states[2]) == 1:
+                if g.states[0] == states[2] or states[1] == states[2]:
+                    print("Please enter another initial to continue")
+                else:
+                    break
+            else:
+                print("Please enter a valid initial")
 
-#         print(states)
+        print(states)
 
-#         # TODO: UNIFORM COST
-#         break
-#     elif searchingAlgorithm == "2":
+        # TODO: UNIFORM COST
+        break
+    elif searchingAlgorithm == "2":
 
-#         print("Please enter the order of tiles")
-#         set_data(first, second, third)
+        print("Please enter the order of tiles")
+        set_data(first, second, third)
 
-#         print(states)
-#         print("FIRST: " + first + " SECOND: " + second + " THIRD: " + third)
+        print(states)
+        print("FIRST: " + first + " SECOND: " + second + " THIRD: " + third)
 
-#         while (1):
-#             decision_point1 = move_tile(game_board, first, states, goal_states)
-#             decision_point2 = move_tile(game_board, second, states, goal_states)
-#             decision_point3 = move_tile(game_board, third, states, goal_states)
+        while (1):
+            decision_point1 = move_tile(game_board, first, states, goal_states)
+            decision_point2 = move_tile(game_board, second, states, goal_states)
+            decision_point3 = move_tile(game_board, third, states, goal_states)
 
-#             if decision_point1 == 0 and decision_point2 == 0 and decision_point3 == 0:
-#                 break
-#         break
+            if decision_point1 == 0 and decision_point2 == 0 and decision_point3 == 0:
+                break
+        break
 
 Button(root, text="Create Initial Board", height=3, width=15, bd=6, command=create_puzzle_initial).place(x=10,y=175)
 Button(root, text="Create Goal Board", height=3, width=15, bd=6, command=create_puzzle_goal).place(x=10,y=465)

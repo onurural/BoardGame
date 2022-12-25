@@ -56,7 +56,7 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
         horizontal = (end.__getitem__(1) - open_list[current_index].position[1])
 
         # TODO: COULD THERE BE A BETTER CHANCE?
-        if searchingAlgorithm == 1:
+        if searchingAlgorithm == 2:
             print("Expanding node at position: " + str(open_list[current_index].position) + " => f = g + h = " +
                   str(open_list[current_index].g) + " + " + str(open_list[current_index].h) + " = " + str(
                 open_list[current_index].f) + ";\n" + str(abs(vertical)) + (" tile" if vertical == 1 else " tiles") + " away " +
@@ -159,17 +159,18 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
 
             # child.h = ((child.position[0] - end_node.position[0]) ** 2) + (
             #         (child.position[1] - end_node.position[1]) ** 2)
-            if searchingAlgorithm == "2":
-                if child.position[0] == end_node.position[0] and child.position[1] - end_node.position[1]:
-                    child.h = 3 - correctPlace - 1
-                else:
-                    child.h = 3 - correctPlace
-                child.f = child.g + child.h
+            # if searchingAlgorithm == 2:
+            print(searchingAlgorithm)
+            if child.position[0] == end_node.position[0] and child.position[1] - end_node.position[1]:
+                child.h = 3 - correctPlace - 1
+            else:
+                child.h = 3 - correctPlace
+            child.f = child.g + child.h
 
-                # Child is already in the open list
-                for open_node in open_list:
-                    if child == open_node and child.g > open_node.g:
-                        continue
+            # Child is already in the open list
+            for open_node in open_list:
+                if child == open_node and child.g > open_node.g:
+                    continue
 
             # Add the child to the open list
             if len(open_list) >= 25:

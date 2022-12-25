@@ -159,7 +159,8 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
 
             # child.h = ((child.position[0] - end_node.position[0]) ** 2) + (
             #         (child.position[1] - end_node.position[1]) ** 2)
-            if searchingAlgorithm == "2":
+            if searchingAlgorithm == 2:
+                print("algort",searchingAlgorithm)
                 if child.position[0] == end_node.position[0] and child.position[1] - end_node.position[1]:
                     child.h = 3 - correctPlace - 1
                 else:
