@@ -59,8 +59,8 @@ def move_tile(board, color_initial, state_list, goal_state_list):
 
     # print("\nCorrect place main: \n" + str(correct_places))
 
-    path = astar(board, (state_list[index].place[0], state_list[index].place[1]),
-                 (goal_state_list[index].place[0], goal_state_list[index].place[1]), color_initial, correct_places)
+    path = calculateCost(board, (state_list[index].place[0], state_list[index].place[1]),
+                 (goal_state_list[index].place[0], goal_state_list[index].place[1]), color_initial, correct_places,searchingAlgorithm)
 
     if path == 0:
         print("EXCEED EXPANSION CAPACITY! GOAL NODE NOT FOUND! SWITCHING TO THE NEXT COLOR!")
@@ -90,7 +90,6 @@ def move_tile(board, color_initial, state_list, goal_state_list):
     state_list[index].place[1] = path[1][1]
     move(board, color_initial, (path[1][0], path[1][1]))
     print_board(board)
-
     if len(path) > 2:
         return 1"""
 
