@@ -2,11 +2,8 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter import Canvas
-import main as m
 from main import *
-import cost
-from cost import calculateCost
+from cost  import calculateCost
 
 class State:
     initial = ""
@@ -16,40 +13,64 @@ class State:
         self.initial = initial
         self.place = place
 
-correctPlace = 0
 def move_tile(board, color_initial, state_list, goal_state_list):
     red_x = goal_states[0].place[0]
-    red_y= goal_states[0].place[1]
+    red_y = goal_states[0].place[1]
     green_x = goal_states[1].place[0]
-    green_y= goal_states[1].place[1]
+    green_y = goal_states[1].place[1]
     blue_x = goal_states[2].place[0]
-    blue_y= goal_states[2].place[1]
+    blue_y = goal_states[2].place[1]
 
-    global correctPlace
+    # global correctPlace
 
     print(state_list[2].initial)
     index = 0 if color_initial == "R" else 1 if color_initial == "G" else 2
 
-    if index == 0 and state_list[index].place[0] == red_x and state_list[index].place[1] == red_y:
-        correctPlace=correctPlace+1
-    elif index == 1 and state_list[index].place[0] == green_x and state_list[index].place[1] == green_y:
-        correctPlace=correctPlace+1
-    elif index == 2 and state_list[index].place[0] == blue_x and state_list[index].place[1] == blue_y:
-        correctPlace=correctPlace+1
-    
+    correct_places = 0
+
+    # print("WE ARE ON COLOR: " + color_initial)
+
+    # print("CORRECT: " + str(correct_places))
+    # print("       STATES       X      GOAL STATES")
+    # print("       (" + str(state_list[0].place[0]) + ", " + str(state_list[0].place[1]) + ")              (" + str(
+    #     goal_state_list[0].place[0]) + ", " + str(goal_state_list[0].place[1]) + ")")
+    # print("       (" + str(state_list[1].place[0]) + ", " + str(state_list[1].place[1]) + ")              (" + str(
+    #     goal_state_list[1].place[0]) + ", " + str(goal_state_list[1].place[1]) + ")")
+    # print("       (" + str(state_list[2].place[0]) + ", " + str(state_list[2].place[1]) + ")              (" + str(
+    #     goal_state_list[2].place[0]) + ", " + str(goal_state_list[2].place[1]) + ")")
+
+    if state_list[0].place[0] == red_x and state_list[0].place[1] == red_y:
+        correct_places = correct_places + 1
+        # print("\nCorrect place if 1: \n" + str(correct_places))
+        # print("R IS IN CORRECT PLACE")
+    if state_list[1].place[0] == green_x and state_list[1].place[1] == green_y:
+        correct_places = correct_places + 1
+        # print("\nCorrect place if 2: \n" + str(correct_places))
+        # print("G IS IN CORRECT PLACE")
+    if state_list[2].place[0] == blue_x and state_list[2].place[1] == blue_y:
+        correct_places = correct_places + 1
+        # print("\nCorrect place if 3: \n" + str(correct_places))
+        # print("B IS IN CORRECT PLACE")
+
+    # print("\nCorrect place main: \n" + str(correct_places))
+
     path = calculateCost(board, (state_list[index].place[0], state_list[index].place[1]),
-                 (goal_state_list[index].place[0], goal_state_list[index].place[1]), color_initial, correctPlace, searchingAlgorithm)
-    if len(path) < 2:
-        return 0
-    state_list[index].place[0] = path[1][0]
-    state_list[index].place[1] = path[1][1]
-    move(board, color_initial, (path[1][0], path[1][1]))
-    print_board(board)
+                 (goal_state_list[index].place[0], goal_state_list[index].place[1]), color_initial, correct_places, searchingAlgorithm)
 
-    #print("CORRECT PLACE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  :   " + str(correctPlace))
+    if path == 0:
+        print("EXCEED EXPANSION CAPACITY! GOAL NODE NOT FOUND! SWITCHING TO THE NEXT COLOR!")
+    else:
+        if len(path) < 2:
+            return 0
+        state_list[index].place[0] = path[1][0]
+        state_list[index].place[1] = path[1][1]
+        move(board, color_initial, (path[1][0], path[1][1]))
+        print_board(board)
 
-    if len(path) > 2:
-        return 1
+        # print("CORRECT PLACE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  :   " + str(correctPlace))
+
+        if len(path) > 2:
+            return 1
 
 
 def move(array, color_initial, where):
@@ -342,6 +363,7 @@ def print_board(board):
 buttonsInitial = [[], [], []]
 buttonsGoal = [[], [], []]
 game_board = [["N", "N", "N"], ["N", "N", "N"], ["N", "N", "N"]]
+game_board_goal = [["N", "N", "N"], ["N", "N", "N"], ["N", "N", "N"]]
 states = []
 goal_states = []
 
@@ -349,7 +371,6 @@ print("---ARRAY START---")
 print_board(game_board)
 
 def create_puzzle_initial():
-    game_board = [["N", "N", "N"], ["N", "N", "N"], ["N", "N", "N"]]
 
     redx = int(float(RedRow.get()))
     redy = int(float(RedCol.get()))
@@ -378,7 +399,6 @@ def create_puzzle_initial():
     print_board(game_board)
 
 def create_puzzle_goal():
-    game_board = [["N", "N", "N"], ["N", "N", "N"], ["N", "N", "N"]]
 
     redx = int(float(RedRowGoal.get()))
     redy = int(float(RedColGoal.get()))
@@ -392,20 +412,20 @@ def create_puzzle_goal():
             buttonsGoal[i].append(Button(frameGoal, height=2, width=5, bd=6))
             if i==redx and j==redy:
                 buttonsGoal[i][j].configure(bg = 'red')
-                game_board[i][j] = "R"
+                game_board_goal[i][j] = "R"
                 goal_states.append(State("R", [i,j]))
             elif i==greenx and j==greeny:
                 buttonsGoal[i][j].configure(bg = 'green')
-                game_board[i][j] = "G"
+                game_board_goal[i][j] = "G"
                 goal_states.append(State("G", [i,j]))
             elif i==bluex and j==bluey:
                 buttonsGoal[i][j].configure(bg = 'blue')
-                game_board[i][j] = "B"
+                game_board_goal[i][j] = "B"
                 goal_states.append(State("B", [i,j]))
             buttonsGoal[i][j].grid(row=i, column=j)
     
     print("---ARRAY GOAL---")
-    print_board(game_board)
+    print_board(game_board_goal)
 
         
 def create_puzzle(redx, redy, greenx, greeny, bluex, bluey):
@@ -421,91 +441,89 @@ def create_puzzle(redx, redy, greenx, greeny, bluex, bluey):
                 buttons[i][j].configure(bg = 'blue')
             buttons[i][j].grid(row=i, column=j)
 
-def print_data():
+def getInputs():
+    order = []
+    while true==1:
+        order.append(str(firstTileOrderValue.get("1.0",END)).strip())
+        if is_initial_valid(order[0]) == 1:
+            order.remove(str(firstTileOrderValue.get("1.0",END)).strip())
+            messagebox.showinfo("Information","Informative message")
+        else:
+            break
+    
+    while true==1:
+        order.append(str(secondTileOrderValue.get("1.0",END)).strip())
+        if is_initial_valid(order[1]) == 1:
+            if order[0] == order[1]:
+                order.remove(str(firstTileOrderValue.get("1.0",END)).strip())
+                messagebox.showinfo("Information","Please enter a valid initial")
+            else:
+                break
+        else:
+            messagebox.showinfo("Information","Please enter a valid initial")
+    while true == 1:
+        order.append(str(thirdTileOrderValue.get("1.0",END)).strip())
+        if is_initial_valid(order[2]) == 1:
+            if order[0] == order[2] or order[1] == order[2]:
+                order.remove(str(firstTileOrderValue.get("1.0",END)).strip())
+                messagebox.showinfo("Information","Please enter a valid initial")
+            else:
+                break
+        else:
+            messagebox.showinfo("Information","Please enter a valid initial")
     print(states)
-    print(goal_states)
+    return order
 
+def start_calculation():
+    true = 1
+    while true == 1:
+    # print("Please choose a searching strategy:")
+    # print("1) Uniform cost search")
+    # print("2) A* search")
 
-data = []
+        searchingAlgorithm = return_algorithm()
+        # Uniform Cost Search
+        if searchingAlgorithm == 1:
+            #states = ["N", "N", "N"]
+            order = []
+            order = getInputs()
 
-def get_data():
-    data.append(return_algorithm())
-    data.append(str(firstTileOrderValue.get("1.0",END)))
-    data.append(str(secondTileOrderValue.get("1.0",END)))
-    data.append(str(thirdTileOrderValue.get("1.0",END)))
+            while (1):
+               decision_point1 = move_tile(game_board, order[0], states, goal_states)
+               decision_point2 = move_tile(game_board, order[1], states, goal_states)
+               decision_point3 = move_tile(game_board, order[2], states, goal_states)
 
-def set_data(f, s, t):
-    first = str(firstTileOrderValue.get("1.0",END))
-    second = str(secondTileOrderValue.get("1.0",END))
-    third = str(thirdTileOrderValue.get("1.0",END))
+               if decision_point1 == 0 and decision_point2 == 0 and decision_point3 == 0:
+                   break
+            break
+        # A* search
+        elif searchingAlgorithm == 2:
 
-first = ""
-second = ""
-third = ""
+            print("Please enter the order of tiles")
+            order = []
+            order = getInputs()
+            # first = str(firstTileOrderValue.get("1.0",END)).strip()
+            # second = str(secondTileOrderValue.get("1.0",END)).strip()
+            # third = str(thirdTileOrderValue.get("1.0",END)).strip()
 
-true = 1
-while true == 1:
-# print("Please choose a searching strategy:")
-# print("1) Uniform cost search")
-# print("2) A* search")
+            # print(game_board)
+            # print(states)
+            # print("R: " + str(states[0].place[0]) + " " + str(states[0].place[1]) + " G: " + str(states[1].place[0]) + " " + str(states[1].place[1]) + " B: " + str(states[2].place[0]) + " " + str(states[2].place[1]) + " ")
+            # print("R: " + str(goal_states[0].place[0]) + " " + str(goal_states[0].place[1]) + " G: " + str(goal_states[1].place[0]) + " " + str(goal_states[1].place[1]) + " B: " + str(goal_states[2].place[0]) + " " + str(goal_states[2].place[1]) + " ")
+            # print(goal_states)
+            # print("FIRST: " + first + " SECOND: " + second + " THIRD: " + third)
 
-    searchingAlgorithm = return_algorithm()
+            while (1):
+                decision_point1 = move_tile(game_board, order[0], states, goal_states)
+                decision_point2 = move_tile(game_board, order[1], states, goal_states)
+                decision_point3 = move_tile(game_board, order[2], states, goal_states)
 
-    if searchingAlgorithm == "1":
-        #states = ["N", "N", "N"]
-
-        print("Please enter the order of tiles that will do an action. Enter R for red, G for green and B for blue")
-
-        while true == 1:
-            states[0] = input("First: ")
-            if is_initial_valid(g.states[0]) == 1:
-                break
-            else:
-                print("Please enter a valid initial")
-
-        while true == 1:
-            states[1] = input("Second: ")
-            if is_initial_valid(states[1]) == 1:
-                if states[0] == states[1]:
-                    print("Please enter another initial to continue")
-                else:
+                if decision_point1 == 0 and decision_point2 == 0 and decision_point3 == 0:
                     break
-            else:
-                print("Please enter a valid initial")
-
-        while true == 1:
-            g.states[2] = input("Third: ")
-            if is_initial_valid(states[2]) == 1:
-                if g.states[0] == states[2] or states[1] == states[2]:
-                    print("Please enter another initial to continue")
-                else:
-                    break
-            else:
-                print("Please enter a valid initial")
-
-        print(states)
-
-        # TODO: UNIFORM COST
-        break
-    elif searchingAlgorithm == "2":
-
-        print("Please enter the order of tiles")
-        set_data(first, second, third)
-
-        print(states)
-        print("FIRST: " + first + " SECOND: " + second + " THIRD: " + third)
-
-        while (1):
-            decision_point1 = move_tile(game_board, first, states, goal_states)
-            decision_point2 = move_tile(game_board, second, states, goal_states)
-            decision_point3 = move_tile(game_board, third, states, goal_states)
-
-            if decision_point1 == 0 and decision_point2 == 0 and decision_point3 == 0:
-                break
-        break
+            break
 
 Button(root, text="Create Initial Board", height=3, width=15, bd=6, command=create_puzzle_initial).place(x=10,y=175)
 Button(root, text="Create Goal Board", height=3, width=15, bd=6, command=create_puzzle_goal).place(x=10,y=465)
-Button(root, text="START", height=3, width=15, bd=6, command=print_data).place(x=10,y=800)
+Button(root, text="START", height=3, width=15, bd=6, command=start_calculation).place(x=10,y=800)
 
 root.mainloop()
