@@ -13,7 +13,7 @@ class State:
         self.initial = initial
         self.place = place
 
-def move_tile(board, color_initial, state_list, goal_state_list):
+def move_tile(board, color_initial, state_list, goal_state_list, searchingAlgorithm):
     red_x = goal_states[0].place[0]
     red_y = goal_states[0].place[1]
     green_x = goal_states[1].place[0]
@@ -179,9 +179,6 @@ def go_down(array, color_initial):
                 else:
                     # TODO: What happens if it cannot go because of board boundary?
                     print("Given value is on [" + str(i) + "][" + str(j) + "] - left is empty - cannot go down")
-
-
-
 
 root = tk.Tk()
 root.title("Board Game")
@@ -444,7 +441,7 @@ def getInputs():
     order = []
     while true==1:
         order.append(str(firstTileOrderValue.get("1.0",END)).strip())
-        if is_initial_valid(order[0]) == 1:
+        if is_initial_valid(order[0]) == 0:
             order.remove(str(firstTileOrderValue.get("1.0",END)).strip())
             messagebox.showinfo("Information","Informative message")
         else:
@@ -484,26 +481,27 @@ def start_calculation():
         # Uniform Cost Search
         if searchingAlgorithm == 1:
             #states = ["N", "N", "N"]
-            order = []
-            order = getInputs()
-
+            # order = []
+            # order = getInputs()
+            first = str(firstTileOrderValue.get("1.0",END)).strip()
+            second = str(secondTileOrderValue.get("1.0",END)).strip()
+            third = str(thirdTileOrderValue.get("1.0",END)).strip()
             while (1):
-               decision_point1 = move_tile(game_board, order[0], states, goal_states)
-               decision_point2 = move_tile(game_board, order[1], states, goal_states)
-               decision_point3 = move_tile(game_board, order[2], states, goal_states)
+               decision_point1 = move_tile(game_board, first, states, goal_states,"1")
+               decision_point2 = move_tile(game_board, second,states, goal_states,"1")
+               decision_point3 = move_tile(game_board, third, states, goal_states,"1")
 
                if decision_point1 == 0 and decision_point2 == 0 and decision_point3 == 0:
                    break
             break
         # A* search
         elif searchingAlgorithm == 2:
-
             print("Please enter the order of tiles")
-            order = []
-            order = getInputs()
-            # first = str(firstTileOrderValue.get("1.0",END)).strip()
-            # second = str(secondTileOrderValue.get("1.0",END)).strip()
-            # third = str(thirdTileOrderValue.get("1.0",END)).strip()
+            # order = []
+            # order = getInputs()
+            first = str(firstTileOrderValue.get("1.0",END)).strip()
+            second = str(secondTileOrderValue.get("1.0",END)).strip()
+            third = str(thirdTileOrderValue.get("1.0",END)).strip()
 
             # print(game_board)
             # print(states)
@@ -512,13 +510,19 @@ def start_calculation():
             # print(goal_states)
             # print("FIRST: " + first + " SECOND: " + second + " THIRD: " + third)
 
+            counter = 0
             while (1):
-                decision_point1 = move_tile(game_board, order[0], states, goal_states)
-                decision_point2 = move_tile(game_board, order[1], states, goal_states)
-                decision_point3 = move_tile(game_board, order[2], states, goal_states)
+                decision_point1 = move_tile(game_board, first, states, goal_states,"2")
+                decision_point2 = move_tile(game_board, second, states, goal_states,"2")
+                decision_point3 = move_tile(game_board, third, states, goal_states,"2")
 
+                print("COUNTER: " + str(counter))
                 if decision_point1 == 0 and decision_point2 == 0 and decision_point3 == 0:
                     break
+                if counter == 100:
+                    print("PATH FINDING IMPOSSIBLE WITH GIVEN VALUES AND ALGORITHM!")
+                    break
+                counter += 1
             break
 
 Button(root, text="Create Initial Board", height=3, width=15, bd=6, command=create_puzzle_initial).place(x=10,y=175)

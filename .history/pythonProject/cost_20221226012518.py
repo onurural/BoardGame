@@ -46,6 +46,7 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
         current_index = 0
 
         for index, item in enumerate(open_list):
+            print("ITEMMM",item.f)
             print(str(item.position) + " => " + str(item.f))
             if item.f < current_node.f:
                 current_node = item
@@ -56,15 +57,12 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
         horizontal = (end.__getitem__(1) - open_list[current_index].position[1])
 
         # TODO: COULD THERE BE A BETTER CHANCE?
-        if searchingAlgorithm == "2":
+        if searchingAlgorithm == 2:
             print("Expanding node at position: " + str(open_list[current_index].position) + " => f = g + h = " +
-              str(open_list[current_index].g) + " + " + str(
-            open_list[current_index].h if first_entered != 1 else (3 - correctPlace)) + " = " + str(
-            open_list[current_index].f if first_entered != 1 else (3 - correctPlace)) + ";\n" + str(abs(vertical)) + (
-                  " tile" if vertical == 1 else " tiles") + " away " +
-              " vertically and " + str(abs(horizontal)) + (
-                  " tile" if horizontal == 1 else " tiles") + " away horizontally "
-              + "from the goal state.\n")
+                  str(open_list[current_index].g) + " + " + str(open_list[current_index].h) + " = " + str(
+                open_list[current_index].f) + ";\n" + str(abs(vertical)) + (" tile" if vertical == 1 else " tiles") + " away " +
+                  " vertically and " + str(abs(horizontal)) + (" tile" if horizontal == 1 else " tiles") + " away horizontally "
+                  + "from the goal state.\n")
         else:
             print("Expanding node at position: " + str(open_list[current_index].position) + " => f = g = " +
                   str(open_list[current_index].g) + " = " + str(
@@ -162,29 +160,21 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
 
             # child.h = ((child.position[0] - end_node.position[0]) ** 2) + (
             #         (child.position[1] - end_node.position[1]) ** 2)
-            if searchingAlgorithm == "2":
-                if child.position[0] == end_node.position[0] and child.position[1] - end_node.position[1]:
-                    child.h = 3 - correctPlace - 1
-                else:
-                    child.h = 3 - correctPlace
-            child.f = child.g + child.h
+                if searchingAlgorithm == "2":
+                    if child.position[0] == end_node.position[0] and child.position[1] - end_node.position[1]:
+                        child.h = 3 - correctPlace - 1
+                    else:
+                        child.h = 3 - correctPlace
+                    child.f = child.g + child.h
 
-            # Child is already in the open list
-            for open_node in open_list:
-                if child == open_node and child.g > open_node.g:
-                    continue
+                # Child is already in the open list
+                for open_node in open_list:
+                    if child == open_node and child.g > open_node.g:
+                        continue
 
             # Add the child to the open list
             if len(open_list) >= 25:
-                print("FRINGE IS FULL! DELETING THE NODE WITH MOST COST! COST IS: ", end="")
-                node_to_be_deleted = None
-                highest_node_f = -1
-                for i in range(len(open_list)):
-                    if highest_node_f < open_list[i].f:
-                        highest_node_f = open_list[i].f
-                        node_to_be_deleted = open_list[i]
-
-                print(str(highest_node_f))
-                open_list.remove(node_to_be_deleted)
+                print("FRINGE IS FULL! DELETING FIRST ONE!")
+                open_list.pop()
 
             open_list.append(child)

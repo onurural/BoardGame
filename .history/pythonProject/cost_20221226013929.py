@@ -46,6 +46,7 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
         current_index = 0
 
         for index, item in enumerate(open_list):
+            print("ITEMMM",item.f)
             print(str(item.position) + " => " + str(item.f))
             if item.f < current_node.f:
                 current_node = item
@@ -167,12 +168,12 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
                     child.h = 3 - correctPlace - 1
                 else:
                     child.h = 3 - correctPlace
-            child.f = child.g + child.h
+                child.f = child.g + child.h
 
-            # Child is already in the open list
-            for open_node in open_list:
-                if child == open_node and child.g > open_node.g:
-                    continue
+                # Child is already in the open list
+                for open_node in open_list:
+                    if child == open_node and child.g > open_node.g:
+                        continue
 
             # Add the child to the open list
             if len(open_list) >= 25:

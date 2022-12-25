@@ -46,6 +46,7 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
         current_index = 0
 
         for index, item in enumerate(open_list):
+            print("ITEMMM",item.f)
             print(str(item.position) + " => " + str(item.f))
             if item.f < current_node.f:
                 current_node = item

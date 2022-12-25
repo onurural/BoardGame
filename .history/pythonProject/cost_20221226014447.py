@@ -14,7 +14,7 @@ class Node():
 
 
 def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
-    first_entered = 1
+    # first_entered = 1
     print("\n\nA star algorithm started!")
     # Create start and end node
     start_node = Node(None, start)
@@ -46,6 +46,7 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
         current_index = 0
 
         for index, item in enumerate(open_list):
+            print("ITEMMM",item.f)
             print(str(item.position) + " => " + str(item.f))
             if item.f < current_node.f:
                 current_node = item
@@ -72,7 +73,7 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
                   " vertically and " + str(abs(horizontal)) + (" tile" if horizontal == 1 else " tiles") + " away horizontally "
                   + "from the goal state.\n")
 
-        first_entered = 0
+        # first_entered = 0
         expansion_order.append(open_list[current_index])
         open_list.pop(current_index)
         closed_list.append(current_node)
@@ -167,7 +168,7 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
                     child.h = 3 - correctPlace - 1
                 else:
                     child.h = 3 - correctPlace
-            child.f = child.g + child.h
+                child.f = child.g + child.h
 
             # Child is already in the open list
             for open_node in open_list:
