@@ -151,27 +151,27 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
 
             # Calculating the f, g, and h values
             if color == "R":
-                if first_entered == 1:
-                    current_node.g += totalCost
                 child.g = current_node.g + 1                # for "R" cost is always 1
                 
             if color == "G":
-                if first_entered == 1:
-                    current_node.g += totalCost
                 if new_position[1] == -1 or new_position[1] == 1:  # left or right
+                    if first_entered == 1:
+                        child.g += totalCost
                     child.g = current_node.g + 1            # for "G" left-right cost is 1
                     print("gggggggg",current_node.g)
                     print("childgggg",child.g)
 
                 if new_position[0] == -1 or new_position[0] == 1:  # up or down
+                    if first_entered == 1:
+                        child.g += totalCost
                     child.g = current_node.g + 2            # for "G" up-down cost is 2
                     print("gggggg",current_node.g)
                     print("childgggg",child.g)
 
             if color == "B":
-                if first_entered == 1:
-                    current_node.g += totalCost
-                if new_position[1] == -1 or new_position[1] == 1:  # left or right  
+                if new_position[1] == -1 or new_position[1] == 1:  # left or right
+                    if first_entered == 1:
+                        child.g += totalCost
                     child.g = current_node.g + 2            # for "B" left-right cost is 2
                 if new_position[0] == -1 or new_position[0] == 1:  # up or down
                     child.g = current_node.g + 1            # for "B" up-down cost is 1

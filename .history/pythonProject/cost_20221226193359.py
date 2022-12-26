@@ -12,10 +12,8 @@ class Node():
     def __eq__(self, other):
         return self.position == other.position
 
-totalCost = 0
 
 def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
-    global totalCost
     first_entered = 1
     print("\n\nA star algorithm started!")
     # Create start and end node
@@ -67,7 +65,6 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
               " vertically and " + str(abs(horizontal)) + (
                   " tile" if horizontal == 1 else " tiles") + " away horizontally "
               + "from the goal state.\n")
-            print("total cost",totalCost)
         else:
             print("Expanding node at position: " + str(open_list[current_index].position) + " => f = g = " +
                   str(open_list[current_index].g) + " = " + str(
@@ -75,6 +72,7 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
                   " vertically and " + str(abs(horizontal)) + (" tile" if horizontal == 1 else " tiles") + " away horizontally "
                   + "from the goal state.\n")
 
+        first_entered = 0
         expansion_order.append(open_list[current_index])
         open_list.pop(current_index)
         closed_list.append(current_node)
@@ -97,13 +95,10 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
                 #   print(" => ", end="")
 
             path = []
-            costs = []
             current = current_node
             while current is not None:
-                costs.append(current.g)
                 path.append(current.position)
                 current = current.parent
-            totalCost += costs[len(costs)-2]    
             return path[::-1]  # Return reversed path
 
         # Generate children
@@ -151,32 +146,25 @@ def calculateCost(board, start, end, color, correctPlace, searchingAlgorithm):
 
             # Calculating the f, g, and h values
             if color == "R":
-                if first_entered == 1:
-                    current_node.g += totalCost
-                child.g = current_node.g + 1                # for "R" cost is always 1
-                
-            if color == "G":
-                if first_entered == 1:
-                    current_node.g += totalCost
-                if new_position[1] == -1 or new_position[1] == 1:  # left or right
-                    child.g = current_node.g + 1            # for "G" left-right cost is 1
-                    print("gggggggg",current_node.g)
-                    print("childgggg",child.g)
+                child.g = current_node.g + 1  # for "R" cost is always 1
+                print("------------------------",child.g)
 
+            if color == "G":
+                print("0 ",new_position[0]," 1",new_position[1])
+                if new_position[1] == -1 or new_position[1] == 1:  # left or right
+                    child.g = current_node.g + 1  # for "G" left-right cost is 1
                 if new_position[0] == -1 or new_position[0] == 1:  # up or down
-                    child.g = current_node.g + 2            # for "G" up-down cost is 2
-                    print("gggggg",current_node.g)
-                    print("childgggg",child.g)
+                    child.g = current_node.g + 2  # for "G" up-down cost is 2
+                print("------------------------",child.g)
 
             if color == "B":
-                if first_entered == 1:
-                    current_node.g += totalCost
-                if new_position[1] == -1 or new_position[1] == 1:  # left or right  
-                    child.g = current_node.g + 2            # for "B" left-right cost is 2
-                if new_position[0] == -1 or new_position[0] == 1:  # up or down
-                    child.g = current_node.g + 1            # for "B" up-down cost is 1
+                print("0 ",new_position[0]," 1",new_position[1])
 
-            first_entered = 0
+                if new_position[1] == -1 or new_position[1] == 1:  # left or right
+                    child.g = current_node.g + 2  # for "B" left-right cost is 2
+                if new_position[0] == -1 or new_position[0] == 1:  # up or down
+                    child.g = current_node.g + 1  # for "B" up-down cost is 1
+                    print("------------------------",child.g)
 
             # child.h = ((child.position[0] - end_node.position[0]) ** 2) + (
             #         (child.position[1] - end_node.position[1]) ** 2)

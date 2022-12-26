@@ -182,7 +182,7 @@ def go_down(array, color_initial):
 
 root = tk.Tk()
 root.title("Board Game")
-root.geometry("900x600")
+root.geometry("1000x900")
 
 frameInitial = tk.Frame(root)
 frameInitial.pack(padx=400, pady=50)
